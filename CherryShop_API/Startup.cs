@@ -40,6 +40,8 @@ namespace CherryShop_API
                     .AllowAnyHeader());
             });
 
+            services.AddAutoMapper(typeof(Maps));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
