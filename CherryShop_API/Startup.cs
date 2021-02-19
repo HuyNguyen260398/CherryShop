@@ -1,5 +1,7 @@
+using CherryShop_API.Contracts;
 using CherryShop_API.Data;
 using CherryShop_API.Mappings;
+using CherryShop_API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -56,6 +58,12 @@ namespace CherryShop_API
                 var xpath = Path.Combine(AppContext.BaseDirectory, xfile);
                 c.IncludeXmlComments(xpath);
             });
+
+            services.AddScoped<ILoggerService, LoggerService>();
+            services.AddScoped<IBrandRepository, BrandRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddControllers();
         }
