@@ -4,5 +4,40 @@
         <name>CherryShop_API</name>
     </assembly>
     <members>
+        <member name="M:CherryShop_API.Controllers.BrandController.GetBrands">
+            <summary>
+            Get all Brands
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.BrandController.GetBrand(System.Int32)">
+            <summary>
+            Get Brand by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.BrandController.Create(CherryShop_API.DTOs.BrandCreateDTO)">
+            <summary>
+            Create Brand
+            </summary>
+            <param name="brandDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.BrandController.Update(System.Int32,CherryShop_API.DTOs.BrandUpdateDTO)">
+            <summary>
+            Update Brand by id
+            </summary>
+            <param name="id"></param>
+            <param name="brandDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.BrandController.Delete(System.Int32)">
+            <summary>
+            Delete Brand by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

@@ -27,7 +27,7 @@ namespace CherryShop_API.Services
             return await Save();
         }
 
-        public async Task<IList<Image>> FindAll()
+        public async Task<IList<Image>> GetAll()
         {
             var images = await db.Images
                 .Include(q => q.Product)
@@ -38,7 +38,7 @@ namespace CherryShop_API.Services
             return images;
         }
 
-        public async Task<Image> FindById(int id)
+        public async Task<Image> GetById(int id)
         {
             var image = await db.Images
                 .Include(q => q.Product)

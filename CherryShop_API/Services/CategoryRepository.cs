@@ -27,7 +27,7 @@ namespace CherryShop_API.Services
             return await Save();
         }
 
-        public async Task<IList<Category>> FindAll()
+        public async Task<IList<Category>> GetAll()
         {
             var categories = await db.Categories
                 .Include(q => q.Products)
@@ -35,7 +35,7 @@ namespace CherryShop_API.Services
             return categories;
         }
 
-        public async Task<Category> FindById(int id)
+        public async Task<Category> GetById(int id)
         {
             var category = await db.Categories
                 .Include(q => q.Products)
