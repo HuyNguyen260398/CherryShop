@@ -4,6 +4,11 @@
         <name>CherryShop_API</name>
     </assembly>
     <members>
+        <member name="T:CherryShop_API.Controllers.BrandController">
+            <summary>
+            Brand API Controller
+            </summary>
+        </member>
         <member name="M:CherryShop_API.Controllers.BrandController.GetBrands">
             <summary>
             Get all Brands
@@ -35,6 +40,46 @@
         <member name="M:CherryShop_API.Controllers.BrandController.Delete(System.Int32)">
             <summary>
             Delete Brand by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CherryShop_API.Controllers.CategoryController">
+            <summary>
+            Category API Controller
+            </summary>
+        </member>
+        <member name="M:CherryShop_API.Controllers.CategoryController.GetCategories">
+            <summary>
+            Get all Categories
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.CategoryController.GetCategory(System.Int32)">
+            <summary>
+            Get Category by id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.CategoryController.Create(CherryShop_API.DTOs.CategoryCreateDTO)">
+            <summary>
+            Create Category
+            </summary>
+            <param name="categoryDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.CategoryController.Update(System.Int32,CherryShop_API.DTOs.CategoryUpdateDTO)">
+            <summary>
+            Update Category by id
+            </summary>
+            <param name="id"></param>
+            <param name="categoryDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.CategoryController.Delete(System.Int32)">
+            <summary>
+            Delete Category by id
             </summary>
             <param name="id"></param>
             <returns></returns>

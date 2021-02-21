@@ -6,48 +6,48 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CherryShop_API.Controllers
 {
     /// <summary>
-    /// Brand API Controller
+    /// Category API Controller
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public class BrandController : ControllerBase
+    public class CategoryController : ControllerBase
     {
-        private readonly IBrandRepository brandRepository;
+        private readonly ICategoryRepository categoryRepository;
         private readonly ILoggerService logger;
         private readonly IMapper mapper;
 
-        public BrandController(
-            IBrandRepository brandRepository,
+        public CategoryController(
+            ICategoryRepository categoryRepository,
             ILoggerService logger,
             IMapper mapper)
         {
-            this.brandRepository = brandRepository;
+            this.categoryRepository = categoryRepository;
             this.logger = logger;
             this.mapper = mapper;
         }
 
         /// <summary>
-        /// Get all Brands
+        /// Get all Categories
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetBrands()
+        public async Task<IActionResult> GetCategories()
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Get all Brands");
-                var brands = await brandRepository.GetAll();
-                var response = mapper.Map<IList<BrandDTO>>(brands);
-                logger.LogInfo($"{location}: Get all Brands successful");
+                logger.LogInfo($"{location}: Get all Categories");
+                var categories = await categoryRepository.GetAll();
+                var response = mapper.Map<IList<CategoryDTO>>(categories);
+                logger.LogInfo($"{location}: Get all Categories successful");
                 return Ok(response);
             }
             catch (Exception e)
@@ -57,7 +57,7 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Get Brand by id
+        /// Get Category by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -65,26 +65,26 @@ namespace CherryShop_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetBrand(int id)
+        public async Task<IActionResult> GetCategory(int id)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Get Brand with id {id}");
-                var isExists = await brandRepository.IsExists(id);
+                logger.LogInfo($"{location}: Get Category with id {id}");
+                var isExists = await categoryRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Brand with id {id} not found");
+                    logger.LogWarn($"{location}: Category with id {id} not found");
                     return NotFound();
                 }
-                var brand = await brandRepository.GetById(id);
-                if (brand == null)
+                var category = await categoryRepository.GetById(id);
+                if (category == null)
                 {
-                    logger.LogWarn($"{location}: Get Brand with id {id} failed");
+                    logger.LogWarn($"{location}: Get Category with id {id} failed");
                     return BadRequest();
                 }
-                var response = mapper.Map<BrandDTO>(brand);
-                logger.LogInfo($"{location}: Get Brand with id {id} successful");
+                var response = mapper.Map<CategoryDTO>(category);
+                logger.LogInfo($"{location}: Get Category with id {id} successful");
                 return Ok(response);
             }
             catch (Exception e)
@@ -94,38 +94,38 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Create Brand
+        /// Create Category
         /// </summary>
-        /// <param name="brandDTO"></param>
+        /// <param name="categoryDTO"></param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] BrandCreateDTO brandDTO)
+        public async Task<IActionResult> Create([FromBody] CategoryCreateDTO categoryDTO)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Create Brand");
-                if (brandDTO == null)
+                logger.LogInfo($"{location}: Create Category");
+                if (categoryDTO == null)
                 {
-                    logger.LogWarn($"{location}: Brand object is empty");
+                    logger.LogWarn($"{location}: Category object is empty");
                     return BadRequest(ModelState);
                 }
                 if (!ModelState.IsValid)
                 {
-                    logger.LogWarn($"{location}: Brand object is incomplete");
+                    logger.LogWarn($"{location}: Category object is incomplete");
                     return BadRequest(ModelState);
                 }
-                var brand = mapper.Map<Brand>(brandDTO);
-                var isSuccess = await brandRepository.Create(brand);
+                var category = mapper.Map<Category>(categoryDTO);
+                var isSuccess = await categoryRepository.Create(category);
                 if (!isSuccess)
                 {
-                    InternalError($"{location}: Create Brand failed");
+                    InternalError($"{location}: Create Category failed");
                 }
-                logger.LogInfo($"{location}: Create Brand successful");
-                return Created("Create", new { brand });
+                logger.LogInfo($"{location}: Create Category successful");
+                return Created("Create", new { category });
             }
             catch (Exception e)
             {
@@ -134,45 +134,45 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Update Brand by id
+        /// Update Category by id
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="brandDTO"></param>
+        /// <param name="categoryDTO"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult>Update(int id, [FromBody] BrandUpdateDTO brandDTO)
+        public async Task<IActionResult>Update(int id, [FromBody] CategoryUpdateDTO categoryDTO)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Update Brand with id {id}");
-                if (id < 1 || brandDTO == null || id != brandDTO.Id)
+                logger.LogInfo($"{location}: Update Category with id {id}");
+                if (id < 1 || categoryDTO == null || id != categoryDTO.Id)
                 {
-                    logger.LogWarn($"{location}: Update Brand with id {id} failed with bad data");
+                    logger.LogWarn($"{location}: Update Category with id {id} failed with bad data");
                     return BadRequest();
                 }
-                var isExists = await brandRepository.IsExists(id);
+                var isExists = await categoryRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Brand with id {id} not found");
+                    logger.LogWarn($"{location}: Category with id {id} not found");
                     return NotFound();
                 }
                 if (!ModelState.IsValid)
                 {
-                    logger.LogWarn($"{location}: Brand object is incomplete");
+                    logger.LogWarn($"{location}: Category object is incomplete");
                     return BadRequest(ModelState);
                 }
-                var brand = mapper.Map<Brand>(brandDTO);
-                var isSuccess = await brandRepository.Update(brand);
+                var category = mapper.Map<Category>(categoryDTO);
+                var isSuccess = await categoryRepository.Update(category);
                 if (!isSuccess)
                 {
-                    return InternalError($"{location}: Update Brand with id {id} failed");
+                    return InternalError($"{location}: Update Category with id {id} failed");
                 }
-                logger.LogInfo($"{location}: Update Brand with id {id} successful");
+                logger.LogInfo($"{location}: Update Category with id {id} successful");
                 return NoContent();
             }
             catch (Exception e)
@@ -182,7 +182,7 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Delete Brand by id
+        /// Delete Category by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -196,25 +196,25 @@ namespace CherryShop_API.Controllers
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Delete Brand with id {id}");
+                logger.LogInfo($"{location}: Delete Category with id {id}");
                 if (id < 1)
                 {
-                    logger.LogWarn($"{location}: Delete Brand with id {id} failed with bad data");
+                    logger.LogWarn($"{location}: Delete Category with id {id} failed with bad data");
                     return BadRequest();
                 }
-                var isExists = await brandRepository.IsExists(id);
+                var isExists = await categoryRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Brand with id {id} not found");
+                    logger.LogWarn($"{location}: Category with id {id} not found");
                     return NotFound();
                 }
-                var brand = await brandRepository.GetById(id);
-                var isSuccess = await brandRepository.Delete(brand);
+                var category = await categoryRepository.GetById(id);
+                var isSuccess = await categoryRepository.Delete(category);
                 if (!isSuccess)
                 {
-                    return InternalError($"{location}: Delete Brand with id {id} failed");
+                    return InternalError($"{location}: Delete Category with id {id} failed");
                 }
-                logger.LogInfo($"{location}: Delete Brand with id {id} successful");
+                logger.LogInfo($"{location}: Delete Category with id {id} successful");
                 return NoContent();
             }
             catch (Exception e)

@@ -13,6 +13,9 @@ namespace CherryShop_API.Mappings
             CreateMap<Brand, BrandUpdateDTO>().ReverseMap();
 
             CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Category, CategoryCreateDTO>().ReverseMap();
+            CreateMap<Category, CategoryUpdateDTO>().ReverseMap();
+
             CreateMap<Image, ImageDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
         }

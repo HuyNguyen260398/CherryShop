@@ -9,11 +9,13 @@ namespace CherryShop_API.DTOs
         public string Name { get; set; }
         public virtual IList<ProductDTO> Products { get; set; }
     }
+
     public class BrandCreateDTO
     {
         [Required]
         public string Name { get; set; }
     }
+
     public class BrandUpdateDTO
     {
         public int Id { get; set; }
