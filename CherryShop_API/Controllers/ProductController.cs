@@ -11,43 +11,43 @@ using System.Threading.Tasks;
 namespace CherryShop_API.Controllers
 {
     /// <summary>
-    /// Category API Controller
+    /// Product API Controller
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public class CategoryController : ControllerBase
+    public class ProductController : ControllerBase
     {
-        private readonly ICategoryRepository categoryRepository;
+        private readonly IProductRepository productRepository;
         private readonly ILoggerService logger;
         private readonly IMapper mapper;
 
-        public CategoryController(
-            ICategoryRepository categoryRepository,
+        public ProductController(
+            IProductRepository productRepository,
             ILoggerService logger,
             IMapper mapper)
         {
-            this.categoryRepository = categoryRepository;
+            this.productRepository = productRepository;
             this.logger = logger;
             this.mapper = mapper;
         }
 
         /// <summary>
-        /// Get all Categories
+        /// Get all Products
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetProducts()
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Get all Categories");
-                var categories = await categoryRepository.GetAll();
-                var response = mapper.Map<IList<CategoryDTO>>(categories);
-                logger.LogInfo($"{location}: Get all Categories successful");
+                logger.LogInfo($"{location}: Get all Products");
+                var products = await productRepository.GetAll();
+                var response = mapper.Map<IList<ProductDTO>>(products);
+                logger.LogInfo($"{location}: Get all Products successful");
                 return Ok(response);
             }
             catch (Exception e)
@@ -57,7 +57,7 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Get Category by id
+        /// Get Product by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -65,26 +65,26 @@ namespace CherryShop_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCategory(int id)
+        public async Task<IActionResult> GetProduct(int id)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Get Category with id {id}");
-                var isExists = await categoryRepository.IsExists(id);
+                logger.LogInfo($"{location}: Get Product with id {id}");
+                var isExists = await productRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Category with id {id} not found");
+                    logger.LogWarn($"{location}: Product with id {id} not found");
                     return NotFound();
                 }
-                var category = await categoryRepository.GetById(id);
-                if (category == null)
+                var product = await productRepository.GetById(id);
+                if (product == null)
                 {
-                    logger.LogWarn($"{location}: Get Category with id {id} failed");
+                    logger.LogWarn($"{location}: Get Product with id {id} failed");
                     return BadRequest();
                 }
-                var response = mapper.Map<CategoryDTO>(category);
-                logger.LogInfo($"{location}: Get Category with id {id} successful");
+                var response = mapper.Map<ProductDTO>(product);
+                logger.LogInfo($"{location}: Get Product with id {id} successful");
                 return Ok(response);
             }
             catch (Exception e)
@@ -94,38 +94,38 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Create Category
+        /// Create Product
         /// </summary>
-        /// <param name="categoryDTO"></param>
+        /// <param name="productDTO"></param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] CategoryCreateDTO categoryDTO)
+        public async Task<IActionResult> Create([FromBody] ProductCreateDTO productDTO)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Create Category");
-                if (categoryDTO == null)
+                logger.LogInfo($"{location}: Create Product");
+                if (productDTO == null)
                 {
-                    logger.LogWarn($"{location}: Category object is empty");
+                    logger.LogWarn($"{location}: Product object is empty");
                     return BadRequest(ModelState);
                 }
                 if (!ModelState.IsValid)
                 {
-                    logger.LogWarn($"{location}: Category object is incomplete");
+                    logger.LogWarn($"{location}: Product object is incomplete");
                     return BadRequest(ModelState);
                 }
-                var category = mapper.Map<Category>(categoryDTO);
-                var isSuccess = await categoryRepository.Create(category);
+                var product = mapper.Map<Product>(productDTO);
+                var isSuccess = await productRepository.Create(product);
                 if (!isSuccess)
                 {
-                    InternalError($"{location}: Create Category failed");
+                    InternalError($"{location}: Create Product failed");
                 }
-                logger.LogInfo($"{location}: Create Category successful");
-                return Created("Create", new { category });
+                logger.LogInfo($"{location}: Create Product successful");
+                return Created("Create", new { product });
             }
             catch (Exception e)
             {
@@ -134,45 +134,45 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Update Category by id
+        /// Update Product by id
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="categoryDTO"></param>
+        /// <param name="productDTO"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult>Update(int id, [FromBody] CategoryUpdateDTO categoryDTO)
+        public async Task<IActionResult> Update(int id, [FromBody] ProductUpdateDTO productDTO)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Update Category with id {id}");
-                if (id < 1 || categoryDTO == null || id != categoryDTO.Id)
+                logger.LogInfo($"{location}: Update Product with id {id}");
+                if (id < 1 || productDTO == null || id != productDTO.Id)
                 {
-                    logger.LogWarn($"{location}: Update Category with id {id} failed with bad data");
+                    logger.LogWarn($"{location}: Update Product with id {id} failed with bad data");
                     return BadRequest();
                 }
-                var isExists = await categoryRepository.IsExists(id);
+                var isExists = await productRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Category with id {id} not found");
+                    logger.LogWarn($"{location}: Product with id {id} not found");
                     return NotFound();
                 }
                 if (!ModelState.IsValid)
                 {
-                    logger.LogWarn($"{location}: Category object is incomplete");
+                    logger.LogWarn($"{location}: Product object is incomplete");
                     return BadRequest(ModelState);
                 }
-                var category = mapper.Map<Category>(categoryDTO);
-                var isSuccess = await categoryRepository.Update(category);
+                var product = mapper.Map<Product>(productDTO);
+                var isSuccess = await productRepository.Update(product);
                 if (!isSuccess)
                 {
-                    return InternalError($"{location}: Update Category with id {id} failed");
+                    return InternalError($"{location}: Update Product with id {id} failed");
                 }
-                logger.LogInfo($"{location}: Update Category with id {id} successful");
+                logger.LogInfo($"{location}: Update Product with id {id} successful");
                 return NoContent();
             }
             catch (Exception e)
@@ -182,7 +182,7 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Delete Category by id
+        /// Delete Product by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -191,30 +191,30 @@ namespace CherryShop_API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult>Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Delete Category with id {id}");
+                logger.LogInfo($"{location}: Delete Product with id {id}");
                 if (id < 1)
                 {
-                    logger.LogWarn($"{location}: Delete Category with id {id} failed with bad data");
+                    logger.LogWarn($"{location}: Delete Product with id {id} failed with bad data");
                     return BadRequest();
                 }
-                var isExists = await categoryRepository.IsExists(id);
+                var isExists = await productRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Category with id {id} not found");
+                    logger.LogWarn($"{location}: Product with id {id} not found");
                     return NotFound();
                 }
-                var category = await categoryRepository.GetById(id);
-                var isSuccess = await categoryRepository.Delete(category);
+                var product = await productRepository.GetById(id);
+                var isSuccess = await productRepository.Delete(product);
                 if (!isSuccess)
                 {
-                    return InternalError($"{location}: Delete Category with id {id} failed");
+                    return InternalError($"{location}: Delete Product with id {id} failed");
                 }
-                logger.LogInfo($"{location}: Delete Category with id {id} successful");
+                logger.LogInfo($"{location}: Delete Product with id {id} successful");
                 return NoContent();
             }
             catch (Exception e)

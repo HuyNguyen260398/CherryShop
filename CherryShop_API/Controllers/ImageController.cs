@@ -11,43 +11,43 @@ using System.Threading.Tasks;
 namespace CherryShop_API.Controllers
 {
     /// <summary>
-    /// Category API Controller
+    /// Image API Controller
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public class CategoryController : ControllerBase
+    public class ImageController : ControllerBase
     {
-        private readonly ICategoryRepository categoryRepository;
+        private readonly IImageRepository imageRepository;
         private readonly ILoggerService logger;
         private readonly IMapper mapper;
 
-        public CategoryController(
-            ICategoryRepository categoryRepository,
+        public ImageController(
+            IImageRepository imageRepository,
             ILoggerService logger,
             IMapper mapper)
         {
-            this.categoryRepository = categoryRepository;
+            this.imageRepository = imageRepository;
             this.logger = logger;
             this.mapper = mapper;
         }
 
         /// <summary>
-        /// Get all Categories
+        /// Get all Images
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetImages()
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Get all Categories");
-                var categories = await categoryRepository.GetAll();
-                var response = mapper.Map<IList<CategoryDTO>>(categories);
-                logger.LogInfo($"{location}: Get all Categories successful");
+                logger.LogInfo($"{location}: Get all Images");
+                var images = await imageRepository.GetAll();
+                var response = mapper.Map<IList<ImageDTO>>(images);
+                logger.LogInfo($"{location}: Get all Images successful");
                 return Ok(response);
             }
             catch (Exception e)
@@ -57,7 +57,7 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Get Category by id
+        /// Get Image by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -65,26 +65,26 @@ namespace CherryShop_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCategory(int id)
+        public async Task<IActionResult> GetImage(int id)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Get Category with id {id}");
-                var isExists = await categoryRepository.IsExists(id);
+                logger.LogInfo($"{location}: Get Image with id {id}");
+                var isExists = await imageRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Category with id {id} not found");
+                    logger.LogWarn($"{location}: Image with id {id} not found");
                     return NotFound();
                 }
-                var category = await categoryRepository.GetById(id);
-                if (category == null)
+                var image = await imageRepository.GetById(id);
+                if (image == null)
                 {
-                    logger.LogWarn($"{location}: Get Category with id {id} failed");
+                    logger.LogWarn($"{location}: Get Image with id {id} failed");
                     return BadRequest();
                 }
-                var response = mapper.Map<CategoryDTO>(category);
-                logger.LogInfo($"{location}: Get Category with id {id} successful");
+                var response = mapper.Map<ImageDTO>(image);
+                logger.LogInfo($"{location}: Get Image with id {id} successful");
                 return Ok(response);
             }
             catch (Exception e)
@@ -94,38 +94,38 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Create Category
+        /// Create Image
         /// </summary>
-        /// <param name="categoryDTO"></param>
+        /// <param name="imageDTO"></param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] CategoryCreateDTO categoryDTO)
+        public async Task<IActionResult> Create([FromBody] ImageCreateDTO imageDTO)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Create Category");
-                if (categoryDTO == null)
+                logger.LogInfo($"{location}: Create Image");
+                if (imageDTO == null)
                 {
-                    logger.LogWarn($"{location}: Category object is empty");
+                    logger.LogWarn($"{location}: Image object is empty");
                     return BadRequest(ModelState);
                 }
                 if (!ModelState.IsValid)
                 {
-                    logger.LogWarn($"{location}: Category object is incomplete");
+                    logger.LogWarn($"{location}: Image object is incomplete");
                     return BadRequest(ModelState);
                 }
-                var category = mapper.Map<Category>(categoryDTO);
-                var isSuccess = await categoryRepository.Create(category);
+                var image = mapper.Map<Image>(imageDTO);
+                var isSuccess = await imageRepository.Create(image);
                 if (!isSuccess)
                 {
-                    InternalError($"{location}: Create Category failed");
+                    InternalError($"{location}: Create Image failed");
                 }
-                logger.LogInfo($"{location}: Create Category successful");
-                return Created("Create", new { category });
+                logger.LogInfo($"{location}: Create Image successful");
+                return Created("Create", new { image });
             }
             catch (Exception e)
             {
@@ -134,45 +134,45 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Update Category by id
+        /// Update Image by id
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="categoryDTO"></param>
+        /// <param name="imageDTO"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult>Update(int id, [FromBody] CategoryUpdateDTO categoryDTO)
+        public async Task<IActionResult> Update(int id, [FromBody] ImageUpdateDTO imageDTO)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Update Category with id {id}");
-                if (id < 1 || categoryDTO == null || id != categoryDTO.Id)
+                logger.LogInfo($"{location}: Update Image with id {id}");
+                if (id < 1 || imageDTO == null || id != imageDTO.Id)
                 {
-                    logger.LogWarn($"{location}: Update Category with id {id} failed with bad data");
+                    logger.LogWarn($"{location}: Update Image with id {id} failed with bad data");
                     return BadRequest();
                 }
-                var isExists = await categoryRepository.IsExists(id);
+                var isExists = await imageRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Category with id {id} not found");
+                    logger.LogWarn($"{location}: Image with id {id} not found");
                     return NotFound();
                 }
                 if (!ModelState.IsValid)
                 {
-                    logger.LogWarn($"{location}: Category object is incomplete");
+                    logger.LogWarn($"{location}: Image object is incomplete");
                     return BadRequest(ModelState);
                 }
-                var category = mapper.Map<Category>(categoryDTO);
-                var isSuccess = await categoryRepository.Update(category);
+                var image = mapper.Map<Image>(imageDTO);
+                var isSuccess = await imageRepository.Update(image);
                 if (!isSuccess)
                 {
-                    return InternalError($"{location}: Update Category with id {id} failed");
+                    return InternalError($"{location}: Update Image with id {id} failed");
                 }
-                logger.LogInfo($"{location}: Update Category with id {id} successful");
+                logger.LogInfo($"{location}: Update Image with id {id} successful");
                 return NoContent();
             }
             catch (Exception e)
@@ -182,7 +182,7 @@ namespace CherryShop_API.Controllers
         }
 
         /// <summary>
-        /// Delete Category by id
+        /// Delete Image by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -191,30 +191,30 @@ namespace CherryShop_API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult>Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var location = GetControllerActionName();
             try
             {
-                logger.LogInfo($"{location}: Delete Category with id {id}");
+                logger.LogInfo($"{location}: Delete Image with id {id}");
                 if (id < 1)
                 {
-                    logger.LogWarn($"{location}: Delete Category with id {id} failed with bad data");
+                    logger.LogWarn($"{location}: Delete Image with id {id} failed with bad data");
                     return BadRequest();
                 }
-                var isExists = await categoryRepository.IsExists(id);
+                var isExists = await imageRepository.IsExists(id);
                 if (!isExists)
                 {
-                    logger.LogWarn($"{location}: Category with id {id} not found");
+                    logger.LogWarn($"{location}: Image with id {id} not found");
                     return NotFound();
                 }
-                var category = await categoryRepository.GetById(id);
-                var isSuccess = await categoryRepository.Delete(category);
+                var image = await imageRepository.GetById(id);
+                var isSuccess = await imageRepository.Delete(image);
                 if (!isSuccess)
                 {
-                    return InternalError($"{location}: Delete Category with id {id} failed");
+                    return InternalError($"{location}: Delete Image with id {id} failed");
                 }
-                logger.LogInfo($"{location}: Delete Category with id {id} successful");
+                logger.LogInfo($"{location}: Delete Image with id {id} successful");
                 return NoContent();
             }
             catch (Exception e)
