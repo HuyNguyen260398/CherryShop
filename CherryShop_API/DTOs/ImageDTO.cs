@@ -17,7 +17,6 @@ namespace CherryShop_API.DTOs
         public string Title { get; set; }
         [Required]
         public string File { get; set; }
-        [Required]
         public int? ProductId { get; set; }
     }
 
@@ -28,7 +27,6 @@ namespace CherryShop_API.DTOs
         public string Title { get; set; }
         [Required]
         public string File { get; set; }
-        [Required]
         public int? ProductId { get; set; }
     }
 }

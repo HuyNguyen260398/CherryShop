@@ -8,8 +8,8 @@ namespace CherryShop_API.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal Price { get; set; }
-        public float DiscountPercent { get; set; }
+        public decimal? Price { get; set; }
+        public float? DiscountPercent { get; set; }
         public int? CategoryId { get; set; }
         public int? BrandId { get; set; }
         public virtual CategoryDTO Category { get; set; }
@@ -24,11 +24,9 @@ namespace CherryShop_API.DTOs
         [StringLength(500)]
         public string Description { get; set; }
         [Required]
-        public decimal Price { get; set; }
-        public float DiscountPercent { get; set; }
-        [Required]
+        public decimal? Price { get; set; }
+        public float? DiscountPercent { get; set; }
         public int? CategoryId { get; set; }
-        [Required]
         public int? BrandId { get; set; }
     }
 
@@ -41,10 +39,8 @@ namespace CherryShop_API.DTOs
         public string Description { get; set; }
         [Required]
         public decimal Price { get; set; }
-        public float DiscountPercent { get; set; }
-        [Required]
+        public float? DiscountPercent { get; set; }
         public int? CategoryId { get; set; }
-        [Required]
         public int? BrandId { get; set; }
     }
 }
