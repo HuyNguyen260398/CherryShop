@@ -164,5 +164,24 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:CherryShop_API.Controllers.UserController">
+            <summary>
+            User API Controller
+            </summary>
+        </member>
+        <member name="M:CherryShop_API.Controllers.UserController.Register(CherryShop_API.DTOs.UserDTO)">
+            <summary>
+            User Registration Endpoint
+            </summary>
+            <param name="userDTO"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CherryShop_API.Controllers.UserController.Login(CherryShop_API.DTOs.UserDTO)">
+            <summary>
+            User Login Endpoint
+            </summary>
+            <param name="userDTO"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>
